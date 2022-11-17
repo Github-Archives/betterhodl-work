@@ -1,0 +1,1 @@
+enum SortOrders { marketCapDesc, marketCapAsc }
