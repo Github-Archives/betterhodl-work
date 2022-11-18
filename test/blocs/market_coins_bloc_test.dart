@@ -124,15 +124,22 @@ void main() {
               )
             ]);
 
+// the stub does not know what to respond
     blocTest<CoinBloc, CoinState>(
       'that the marketCoin list is updated when live price callback is called',
       setUp: () {
         var bloc = CoinBloc(client: client, socketService: socketService);
+        // when(socketService.connectAndListen(
+        //         uri: Uri.parse(socketUri),
+        //         callback: bloc.livePriceUpdate,
+        //         errorCallBack: bloc.livePriceError))
+        //     .thenReturn(result);
+        // .thenAnswer((_) => {});
         when(socketService.connectAndListen(
-                uri: Uri.parse(socketUri),
-                callback: bloc.livePriceUpdate,
-                errorCallBack: bloc.livePriceError))
-            .thenAnswer((_) {});
+          uri: anyNamed('uri'), // these params might not be matching
+          callback: anyNamed('callback'),
+          errorCallBack: anyNamed('errorCallBack'),
+        )).thenAnswer((_) {});
       },
       build: () => CoinBloc(client: client, socketService: socketService),
       act: (bloc) {

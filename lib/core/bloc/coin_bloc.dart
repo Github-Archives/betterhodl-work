@@ -165,7 +165,8 @@ class CoinBloc extends Bloc<CoinEvent, CoinState> with ChangeNotifier {
   listenForLivePrices() {
     var query = _getLivePriceQuery();
     socketService.connectAndListen(
-        uri: Uri.parse(query),
+        uri: Uri.parse(
+            query), // ? is this the same as the socketUri in the test?
         callback: livePriceUpdate,
         errorCallBack: livePriceError);
   }
