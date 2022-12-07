@@ -65,7 +65,6 @@ class MarketCoin extends Equatable {
     );
   }
 
-  // market data is inconsistent between int and double values
   static double toDouble(dynamic value) {
     if (value != null) {
       if (value is int) return value.toDouble();
@@ -99,4 +98,39 @@ class MarketCoin extends Equatable {
         atlChangePercentage,
         atlDate
       ];
+
+  MarketCoin copyWith(
+          {String? image,
+          double? currentPrice,
+          double? marketCap,
+          int? marketCapRank,
+          double? high24h,
+          double? low24h,
+          double? priceChange24h,
+          double? priceChangePercentage24h,
+          double? ath,
+          double? athChangePercentage,
+          DateTime? athDate,
+          double? atl,
+          double? atlChangePercentage,
+          DateTime? altDate}) =>
+      MarketCoin(
+          id: id,
+          symbol: symbol,
+          name: name,
+          image: image ?? this.image,
+          currentPrice: currentPrice ?? this.currentPrice,
+          marketCap: marketCap ?? this.marketCap,
+          marketCapRank: marketCapRank ?? this.marketCapRank,
+          high24h: high24h ?? this.high24h,
+          low24h: low24h ?? this.low24h,
+          priceChange24h: priceChange24h ?? this.priceChange24h,
+          priceChangePercentage24h:
+              priceChangePercentage24h ?? this.priceChangePercentage24h,
+          ath: ath ?? this.ath,
+          athChangePercentage: athChangePercentage ?? this.athChangePercentage,
+          athDate: athDate ?? this.athDate,
+          atl: atl ?? this.atl,
+          atlChangePercentage: atlChangePercentage ?? this.atlChangePercentage,
+          atlDate: atlDate ?? this.atlDate);
 }

@@ -4,14 +4,13 @@ import 'package:betterhodl_flutter/constants.dart';
 import 'package:betterhodl_flutter/core/bloc/coin_bloc.dart';
 import 'package:betterhodl_flutter/domain/models/market_coin.dart';
 import 'package:betterhodl_flutter/screens/market_list.dart';
-// import 'package:betterhodl_flutter/view_models/market_coins_view_model.dart';
+import 'package:betterhodl_flutter/view_models/market_coins_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 
-import '../view_models/market_coin_view_models_test.mocks.dart';
 import 'market_list_test.mocks.dart';
 
 var marketCoin = MarketCoin(
@@ -34,29 +33,19 @@ var marketCoin = MarketCoin(
     atlChangePercentage: -234.00,
     atlDate: DateTime.now());
 
-// this was here originally
-// class MockMarketListViewModel extends Mock implements MarketCoinsViewModel {}
+//class MockMarketListViewModel extends Mock implements MarketCoinsViewModel {}
 
-// new
-// class MockMarketListViewModel extends Mock implements CoinBloc {}
-
-// @GenerateMocks([MarketCoinsViewModel])
 @GenerateMocks([CoinBloc])
 void main() {
   testWidgets('MarketList sort pressed', (WidgetTester tester) async {
-    // final client = MockClient();
-    // final socketService = MockSocketService();
     var mockViewModel = MockMarketCoinsViewModel();
-    // var mockViewModel = CoinBloc(client, socketService);
-    when(mockViewModel.loading).thenReturn(false);
     when(mockViewModel.sortOrder).thenReturn(SortOrders.marketCapAsc);
     when(mockViewModel.marketCoins).thenReturn([]);
     when(mockViewModel.sort()).thenReturn(Void);
 
     const testKey = Key('K');
 
-    // final widgetUnderTest = ChangeNotifierProvider<MarketCoinsViewModel>(
-    final widgetUnderTest = ChangeNotifierProvider<CoinBloc>(
+    final widgetUnderTest = ChangeNotifierProvider<MarketCoinsViewModel>(
         create: (_) => mockViewModel,
         builder: (context, child) {
           return const MaterialApp(key: testKey, home: MarketList());

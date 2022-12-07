@@ -5,13 +5,11 @@ import 'package:betterhodl_flutter/core/bloc/coin_state.dart';
 import 'package:betterhodl_flutter/core/network/socket_service.dart';
 import 'package:betterhodl_flutter/domain/models/market_coin.dart';
 import 'package:bloc_test/bloc_test.dart';
-// import 'package:betterhodl_flutter/view_models/market_coins_view_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:http/http.dart' as http;
 import 'package:mockito/mockito.dart';
 import '../view_models/market_coin_view_models_test.mocks.dart';
-// import 'market_coin_view_models_test.mocks.dart';
 
 @GenerateMocks([http.Client, SocketService])
 void main() {
@@ -21,7 +19,7 @@ void main() {
     "symbol": "btc",
     "name": "Bitcoin",
     "image": "https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579",
-    "current_price": 23338,
+    "current_price": 23338.1,
     "market_cap": 445841127198,
     "market_cap_rank": 1,
     "high_24h": 27811,
@@ -61,23 +59,39 @@ void main() {
     "roi":null,
     "last_updated":"2022-06-16T19:53:23.628Z"}]''';
 
-  const livePriceData =
-      '{"bitcoin":"20520.22","cardano":"0.470882","theta fuel":"0.878248"}';
+  // const livePriceData =
+  //     '{"bitcoin":"20520.22","cardano":"0.470882","theta fuel":"0.878248"}';
+  const livePriceData = '{"bitcoin":"500.1", "theta fuel":"0.6"}';
   const marketCoinUri =
       'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false';
   const socketUri = 'wss://ws.coincap.io/prices?assets=bitcoin,theta fuel';
 
-// all need to start with FetchCoins()
   group('that the marketCoinMap is built correctly', () {
     final client = MockClient();
     final socketService = MockSocketService();
     when(client.get(Uri.parse(marketCoinUri)))
         .thenAnswer((_) async => http.Response(marketJson, 200));
+
     blocTest<CoinBloc, CoinState>(
       'test init bloc state is empty',
       build: () => CoinBloc(client: client, socketService: socketService),
       expect: () => [],
     );
+
+    blocTest<CoinBloc, CoinState>(
+      'test coin state is empty',
+      build: () => CoinBloc(client: client, socketService: socketService),
+      // act: (bloc) => bloc.add(const FetchCoins()),
+      expect: () => [
+        const CoinState(
+          sortOrder: SortOrders.marketCapDesc,
+          marketCoinMap: {},
+          isLivePricingEnabled: false,
+          error: null,
+        )
+      ],
+    );
+
     blocTest<CoinBloc, CoinState>(
       'test FetchCoins event',
       build: () => CoinBloc(client: client, socketService: socketService),
@@ -86,15 +100,15 @@ void main() {
         CoinState(
           sortOrder: SortOrders.marketCapDesc,
           marketCoinMap: {
-            'bitcoin': getMarketCoin1(),
-            'theta fuel': getMarketCoin2()
+            'bitcoin': getMarketCoin1(23338.1),
+            'theta fuel': getMarketCoin2(0.0445775)
           },
-          isLoading: false,
           isLivePricingEnabled: false,
           error: null,
         )
       ],
     );
+
     blocTest<CoinBloc, CoinState>('test SortCoins event',
         build: () => CoinBloc(client: client, socketService: socketService),
         act: (bloc) {
@@ -105,38 +119,49 @@ void main() {
               CoinState(
                 sortOrder: SortOrders.marketCapDesc,
                 marketCoinMap: {
-                  'bitcoin': getMarketCoin1(),
-                  'theta fuel': getMarketCoin2()
+                  'bitcoin': getMarketCoin1(23338.1),
+                  'theta fuel': getMarketCoin2(0.0445775)
                 },
-                isLoading: false,
                 isLivePricingEnabled: false,
                 error: null,
               ),
               CoinState(
                 sortOrder: SortOrders.marketCapAsc,
                 marketCoinMap: {
-                  'bitcoin': getMarketCoin1(),
-                  'theta fuel': getMarketCoin2()
+                  'bitcoin': getMarketCoin1(23338.1),
+                  'theta fuel': getMarketCoin2(0.0445775)
                 },
-                isLoading: false,
                 isLivePricingEnabled: false,
                 error: null,
               )
             ]);
 
-// the stub does not know what to respond
+    blocTest<CoinBloc, CoinState>(
+      'test LivePricingUpdate event',
+      build: () => CoinBloc(client: client, socketService: socketService),
+      act: (bloc) {
+        bloc.add(const FetchCoins());
+        bloc.add(const LivePricingUpdate(livePriceData));
+      },
+      skip: 1,
+      expect: () => [
+        CoinState(
+          sortOrder: SortOrders.marketCapDesc,
+          marketCoinMap: {
+            'bitcoin': getMarketCoin1(500.1),
+            'theta fuel': getMarketCoin2(0.6)
+          },
+          isLivePricingEnabled: false,
+          error: null,
+        ),
+      ],
+    );
+
     blocTest<CoinBloc, CoinState>(
       'that the marketCoin list is updated when live price callback is called',
       setUp: () {
-        var bloc = CoinBloc(client: client, socketService: socketService);
-        // when(socketService.connectAndListen(
-        //         uri: Uri.parse(socketUri),
-        //         callback: bloc.livePriceUpdate,
-        //         errorCallBack: bloc.livePriceError))
-        //     .thenReturn(result);
-        // .thenAnswer((_) => {});
         when(socketService.connectAndListen(
-          uri: anyNamed('uri'), // these params might not be matching
+          uri: anyNamed('uri'),
           callback: anyNamed('callback'),
           errorCallBack: anyNamed('errorCallBack'),
         )).thenAnswer((_) {});
@@ -145,102 +170,39 @@ void main() {
       act: (bloc) {
         bloc.add(const FetchCoins());
         bloc.add(const ToggleLivePricing());
-        // bloc.add(const LivePricingUpdate());
       },
       expect: () => [
         CoinState(
           sortOrder: SortOrders.marketCapDesc,
           marketCoinMap: {
-            'bitcoin': getMarketCoin1(),
-            'theta fuel': getMarketCoin2()
+            'bitcoin': getMarketCoin1(23338.1),
+            'theta fuel': getMarketCoin2(0.0445775)
           },
-          isLoading: false,
           isLivePricingEnabled: false,
           error: null,
         ),
         CoinState(
           sortOrder: SortOrders.marketCapDesc,
           marketCoinMap: {
-            'bitcoin': getMarketCoin1(),
-            'theta fuel': getMarketCoin2()
+            'bitcoin': getMarketCoin1(23338.1),
+            'theta fuel': getMarketCoin2(0.0445775)
           },
-          isLoading: false,
           isLivePricingEnabled: true,
           error: null,
         ),
       ],
     );
-
-    // blocTest<CoinBloc, CoinState>(
-    //   'test FetchCoins then ToggleLivePricing then LivePricingUpdate then ToggleLivePricing (to stop) event',
-    //   setUp: () {
-    //     var bloc = CoinBloc(client: client, socketService: socketService);
-    //     when(socketService.connectAndListen(
-    //             uri: Uri.parse(socketUri),
-    //             callback: bloc.livePriceUpdate,
-    //             errorCallBack: bloc.livePriceError))
-    //         .thenAnswer((_) {});
-    //   },
-    //   build: () => CoinBloc(client: client, socketService: socketService),
-    //   act: (bloc) {
-    //     bloc.add(const FetchCoins());
-    //     bloc.add(const ToggleLivePricing());
-    //     // bloc.add(const LivePricingUpdate(priceData: livePriceData));
-    //     bloc.add(const LivePricingUpdate(livePriceData));
-    //     bloc.add(const ToggleLivePricing());
-    //   },
-    //   expect: () => [
-    //     CoinState(
-    //       sortOrder: SortOrders.marketCapDesc,
-    //       marketCoinMap: {
-    //         'bitcoin': getMarketCoin1(),
-    //         'theta fuel': getMarketCoin2()
-    //       },
-    //       isLoading: false,
-    //       isLivePricingEnabled: false,
-    //       error: null,
-    //     ),
-    //     CoinState(
-    //       sortOrder: SortOrders.marketCapDesc,
-    //       marketCoinMap: {
-    //         'bitcoin': getMarketCoin1(),
-    //         'theta fuel': getMarketCoin2()
-    //       },
-    //       isLoading: false,
-    //       isLivePricingEnabled: true,
-    //       error: null,
-    //     ),
-    //   ],
-    // );
-
-    // expect: () => [
-    //       const CoinState(
-    //         sortOrder: SortOrders.marketCapDesc,
-    //         marketCoinMap: {},
-    //         isLoading: false,
-    //         isLivePricingEnabled: true,
-    //         error: null,
-    //         livePricingEnabled: true,
-    //       )
-    //     ]);
-
-    // blocTest<CoinBloc, CoinState>(
-    //   'that json is decoded into MarketCoin objects',
-    //   build: () => CoinBloc(client: client, socketService: socketService),
-    //   act: (bloc) => bloc.add(const FetchCoins()),
-    //   expect: () => [],
-    // );
   });
 }
 
-MarketCoin getMarketCoin1() {
+MarketCoin getMarketCoin1(currentPrice) {
   return MarketCoin(
       id: 'bitcoin',
       symbol: 'btc',
       name: 'Bitcoin',
       image:
           'https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579',
-      currentPrice: 23338,
+      currentPrice: currentPrice,
       marketCap: 445841127198,
       marketCapRank: 1,
       high24h: 27811,
@@ -255,14 +217,14 @@ MarketCoin getMarketCoin1() {
       atlDate: DateTime.parse('2013-07-06T00:00:00.000Z'));
 }
 
-MarketCoin getMarketCoin2() {
+MarketCoin getMarketCoin2(currentPrice) {
   return MarketCoin(
       id: 'theta-fuel',
       symbol: 'tfuel',
       name: 'Theta Fuel',
       image:
           'https://assets.coingecko.com/coins/images/8029/large/1_0YusgngOrriVg4ZYx4wOFQ.png?1553483622',
-      currentPrice: 0.0445775,
+      currentPrice: currentPrice,
       marketCap: 1886178774,
       marketCapRank: 31,
       high24h: 0.04801865,
@@ -277,6 +239,13 @@ MarketCoin getMarketCoin2() {
       atlDate: DateTime.parse('2020-03-13T02:30:37.972Z'));
 }
 
+
+
+// expect(marketCoinsViewModel.marketCoinMap['bitcoin']?.currentPrice, 20520.22);
+//
+//expect(marketCoinsViewModel.marketCoinMap['theta fuel']?.currentPrice, 0.878248);
+//
+
 // MarketCoin getMarketCoin3() {
 //   return getMarketCoin1().copyWith(currentPrice: 20520.22);
 // }
@@ -284,8 +253,6 @@ MarketCoin getMarketCoin2() {
 // MarketCoin getMarketCoin4() {
 //   return getMarketCoin2().copyWith(currentPrice: 0.878248);
 // }
-
-
 
 //     group('market coin view models', () {
 //       test('that correct request is made to http client', () async {

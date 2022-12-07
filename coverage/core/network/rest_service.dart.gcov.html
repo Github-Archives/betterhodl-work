@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-07-13 10:30:25</td>
+            <td class="headerValue">2022-12-05 15:02:51</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -83,7 +83,7 @@
 <a name="21"><span class="lineNum">      21 </span>            : </a>
 <a name="22"><span class="lineNum">      22 </span><span class="lineCov">          2 :   Future&lt;Object&gt; get(String url, Function decode) async {</span></a>
 <a name="23"><span class="lineNum">      23 </span>            :     try {</a>
-<a name="24"><span class="lineNum">      24 </span><span class="lineCov">          8 :       final response = await client.get(Uri.parse(url));</span></a>
+<a name="24"><span class="lineNum">      24 </span><span class="lineCov">          6 :       final response = await client.get(Uri.parse(url));</span></a>
 <a name="25"><span class="lineNum">      25 </span><span class="lineCov">          4 :       if (200 == response.statusCode) {</span></a>
 <a name="26"><span class="lineNum">      26 </span><span class="lineCov">          4 :         var result = decode(response.body);</span></a>
 <a name="27"><span class="lineNum">      27 </span><span class="lineCov">          2 :         return Success(response: result);</span></a>

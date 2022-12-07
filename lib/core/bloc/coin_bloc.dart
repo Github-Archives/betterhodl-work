@@ -1,5 +1,3 @@
-// TODO: In screens the view_model is being represented and available to widget tree.. this will change to know that its connected
-
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -19,14 +17,14 @@ import 'package:http/http.dart' as http;
 //  Answer: with BlocProvider
 
 // I will eventually be using BlocProvider instead of ChangeNotifier
-class CoinBloc extends Bloc<CoinEvent, CoinState> with ChangeNotifier {
-  bool _loading = false;
-  bool get loading => _loading;
-  bool _livePricingEnabled = false;
+class CoinBloc extends Bloc<CoinEvent, CoinState> {
+  // bool _loading = false;
+  // bool get loading => _loading;
+  // bool _livePricingEnabled = false;
 
-  List<MarketCoin> _marketCoins = [];
-  List<MarketCoin> get marketCoins => _marketCoins;
-  Map<String, MarketCoin> marketCoinMap = {};
+  // List<MarketCoin> _marketCoins = [];
+  // List<MarketCoin> get marketCoins => _marketCoins;
+  // Map<String, MarketCoin> marketCoinMap = {};
 
   final http.Client client;
   final SocketService socketService;
@@ -39,134 +37,83 @@ class CoinBloc extends Bloc<CoinEvent, CoinState> with ChangeNotifier {
 
   CoinBloc({required this.socketService, required this.client})
       : super(const CoinState(
-            sortOrder: SortOrders.marketCapDesc,
-            marketCoinMap: {},
-            isLivePricingEnabled: false,
-            error: null,
-            // isLivePricingEnabled: false,
-            isLoading: true)) {
-    // On is inherited from bloc… registering an event handler to talk to the bloc
-    on<FetchCoins>((event, emit) async {
-      final marketCoinsMap = await getMarketCoins();
-      print('Here in FetchCoins!!');
-      // debugPrint('marketCoinsMap: $marketCoinsMap');
-      emit(CoinState(
           sortOrder: SortOrders.marketCapDesc,
-          marketCoinMap: marketCoinMap,
-          isLivePricingEnabled: state.isLivePricingEnabled,
+          marketCoinMap: {},
+          isLivePricingEnabled: false,
           error: null,
-          // isLivePricingEnabled: true,
-          isLoading: false));
+        )) {
+    on<FetchCoins>((event, emit) async {
+      final marketCoinMap = await getMarketCoins();
+      print('Here in FetchCoins!!');
+      emit(CoinState(
+        sortOrder: SortOrders.marketCapDesc,
+        marketCoinMap: marketCoinMap,
+        isLivePricingEnabled: state.isLivePricingEnabled,
+        error: null,
+      ));
     });
 
     on<SortCoins>(
       (event, emit) => emit(CoinState(
-          sortOrder: state.sortOrder == SortOrders.marketCapDesc
-              ? SortOrders.marketCapAsc
-              : SortOrders.marketCapDesc,
-          marketCoinMap: state.marketCoinMap,
-          isLivePricingEnabled: state.isLivePricingEnabled,
-          error: state.error,
-          isLoading: state.isLoading)),
+        sortOrder: state.sortOrder == SortOrders.marketCapDesc
+            ? SortOrders.marketCapAsc
+            : SortOrders.marketCapDesc,
+        marketCoinMap: state.marketCoinMap,
+        isLivePricingEnabled: state.isLivePricingEnabled,
+        error: state.error,
+      )),
     );
 
     on<ToggleLivePricing>((event, emit) {
-      // var toggleLivePricingx = toggleLivePricing();
       print('Here in ToggleLivePricing!!');
-      toggleLivePricing();
+      toggleLivePricing(state);
       emit(CoinState(
-          // sortOrder: SortOrders.marketCapDesc,
-          sortOrder: state.sortOrder,
-          marketCoinMap: state.marketCoinMap,
-          isLivePricingEnabled: !state.isLivePricingEnabled,
-          error: state.error,
-          isLoading: state.isLoading));
+        sortOrder: state.sortOrder,
+        marketCoinMap: state.marketCoinMap,
+        isLivePricingEnabled: !state.isLivePricingEnabled,
+        error: state.error,
+      ));
     });
 
     on<LivePricingUpdate>((event, emit) {
       var marketCoinMap = updateMarketCoin(event.priceData);
-      print(event.priceData);
       print('Here in LivePricingUpdate!!');
+      print(event.priceData);
       emit(CoinState(
-          sortOrder: SortOrders.marketCapDesc,
-          marketCoinMap: marketCoinMap,
-          isLivePricingEnabled: state.isLivePricingEnabled,
-          error: state.error,
-          isLoading: state.isLoading));
+        sortOrder: SortOrders.marketCapDesc,
+        marketCoinMap: marketCoinMap,
+        isLivePricingEnabled: state.isLivePricingEnabled,
+        error: state.error,
+      ));
     });
   }
 
-  // CoinBloc(this.client, this.socketService)
-  //     : super(const CoinState.emptyState()) {
-  //   on<FetchCoins>((event, emit) {
-  //     // right now i'm calling events from the UI
-  //     //  Ui needs to call events to get the new state!!
-
-  //     // functions working inside block
-  //     //   need to have the events stream coming in
-
-  //     print('FetchCoins');
-  //     // print('event: $event');
-  //     // print('emit: $emit');
-  //     // TODO:
-  //     // 1. perform logic to get the coins (wether it's calling the API/etc.. get the data we want.. alittle tricky)
-  //     // 2. want to emit the state
-  //     // 3. FE do something with that state (probably a BlocBuilder)
-  //     // return ['Fuck you'];
-  //   });
-
-// ! all of these should be private
-  setLoading(bool loading) {
-    _loading = loading;
-    // market_coins_view_model.dart was extending ChangeNotifier for this...
-    notifyListeners();
-  }
-
-  sort() {
-    switch (sortOrder) {
-      case SortOrders.marketCapDesc:
-        _marketCoins.sort((a, b) => a.marketCapRank.compareTo(b.marketCapRank));
-        break;
-      case SortOrders.marketCapAsc:
-        _marketCoins.sort((a, b) => b.marketCapRank.compareTo(a.marketCapRank));
-        break;
-      default:
-    }
-    // market_coins_view_model.dart was extending ChangeNotifier for this...
-    notifyListeners();
-  }
-
-  toggleLivePricing() {
-    if (_livePricingEnabled) {
-      // print('true');
+  toggleLivePricing(CoinState coinState) {
+    if (coinState.isLivePricingEnabled) {
       stopLivePrices();
     } else {
-      // print('false');
       listenForLivePrices();
-      // getPriceData();
     }
-    _livePricingEnabled =
-        !_livePricingEnabled; // this will go into state object.. not here
   }
 
-  getMarketCoins() async {
-    setLoading(true);
+  Future<Map<String, MarketCoin>> getMarketCoins() async {
     RestService restService = RestService(client);
     var response = await restService.get(marketUrl, marketCoinsFromJson);
     if (response is Success) {
-      _marketCoins = response.response;
-      for (var marketCoin in _marketCoins) {
+      var marketCoins = response.response;
+      Map<String, MarketCoin> marketCoinMap = {};
+      for (var marketCoin in marketCoins) {
         marketCoinMap[marketCoin.name.toLowerCase()] = marketCoin;
       }
+      return marketCoinMap;
     }
-    setLoading(false);
+    return {};
   }
 
   listenForLivePrices() {
     var query = _getLivePriceQuery();
     socketService.connectAndListen(
-        uri: Uri.parse(
-            query), // ? is this the same as the socketUri in the test?
+        uri: Uri.parse(query),
         callback: livePriceUpdate,
         errorCallBack: livePriceError);
   }
@@ -176,24 +123,29 @@ class CoinBloc extends Bloc<CoinEvent, CoinState> with ChangeNotifier {
   }
 
   livePriceUpdate(dynamic event) {
-    updateMarketCoin(json.decode(event));
+    add(LivePricingUpdate(event));
   }
 
   livePriceError(dynamic error) {
     // handle this
   }
 
-  updateMarketCoin(Map<String, dynamic> priceData) {
-    priceData.forEach((key, value) {
-      marketCoinMap[key]?.currentPrice = double.parse(value);
+  Map<String, MarketCoin> updateMarketCoin(String priceData) {
+    var mapStringDynamicDecoded = json.decode(priceData);
+    Map<String, MarketCoin> marketCoinMapCopy = Map.from(state.marketCoinMap);
+    mapStringDynamicDecoded.forEach((key, value) {
+      if (marketCoinMapCopy.containsKey(key)) {
+        marketCoinMapCopy[key] =
+            marketCoinMapCopy[key]!.copyWith(currentPrice: double.parse(value));
+      }
     });
-    notifyListeners();
+    return marketCoinMapCopy;
   }
 
   String _getLivePriceQuery() {
     var buffer = StringBuffer(livePriceWss);
     var first = true;
-    for (var marketCoin in _marketCoins) {
+    for (var marketCoin in state.coins) {
       if (!first) {
         buffer.write(',');
       }

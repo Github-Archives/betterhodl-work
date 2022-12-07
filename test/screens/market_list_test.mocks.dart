@@ -2,15 +2,14 @@
 // in betterhodl_flutter/test/screens/market_list_test.dart.
 // Do not manually edit this file.
 
-import 'dart:async' as _i8;
-import 'dart:ui' as _i11;
+import 'dart:async' as _i7;
 
-import 'package:betterhodl_flutter/constants.dart' as _i7;
+import 'package:betterhodl_flutter/constants.dart' as _i6;
 import 'package:betterhodl_flutter/core/bloc/coin_bloc.dart' as _i5;
 import 'package:betterhodl_flutter/core/bloc/coin_event.dart' as _i9;
 import 'package:betterhodl_flutter/core/bloc/coin_state.dart' as _i4;
 import 'package:betterhodl_flutter/core/network/socket_service.dart' as _i3;
-import 'package:betterhodl_flutter/domain/models/market_coin.dart' as _i6;
+import 'package:betterhodl_flutter/domain/models/market_coin.dart' as _i8;
 import 'package:flutter_bloc/flutter_bloc.dart' as _i10;
 import 'package:http/http.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
@@ -40,14 +39,6 @@ class MockCoinBloc extends _i1.Mock implements _i5.CoinBloc {
   }
 
   @override
-  Map<String, _i6.MarketCoin> get marketCoinMap => (super.noSuchMethod(
-      Invocation.getter(#marketCoinMap),
-      returnValue: <String, _i6.MarketCoin>{}) as Map<String, _i6.MarketCoin>);
-  @override
-  set marketCoinMap(Map<String, _i6.MarketCoin>? _marketCoinMap) =>
-      super.noSuchMethod(Invocation.setter(#marketCoinMap, _marketCoinMap),
-          returnValueForMissingStub: null);
-  @override
   _i2.Client get client => (super.noSuchMethod(Invocation.getter(#client),
       returnValue: _FakeClient_0()) as _i2.Client);
   @override
@@ -55,42 +46,38 @@ class MockCoinBloc extends _i1.Mock implements _i5.CoinBloc {
       (super.noSuchMethod(Invocation.getter(#socketService),
           returnValue: _FakeSocketService_1()) as _i3.SocketService);
   @override
-  _i7.SortOrders get sortOrder =>
+  _i6.SortOrders get sortOrder =>
       (super.noSuchMethod(Invocation.getter(#sortOrder),
-          returnValue: _i7.SortOrders.marketCapDesc) as _i7.SortOrders);
+          returnValue: _i6.SortOrders.marketCapDesc) as _i6.SortOrders);
   @override
-  set sortOrder(_i7.SortOrders? _sortOrder) =>
+  set sortOrder(_i6.SortOrders? _sortOrder) =>
       super.noSuchMethod(Invocation.setter(#sortOrder, _sortOrder),
           returnValueForMissingStub: null);
-  @override
-  bool get loading =>
-      (super.noSuchMethod(Invocation.getter(#loading), returnValue: false)
-          as bool);
-  @override
-  List<_i6.MarketCoin> get marketCoins =>
-      (super.noSuchMethod(Invocation.getter(#marketCoins),
-          returnValue: <_i6.MarketCoin>[]) as List<_i6.MarketCoin>);
   @override
   _i4.CoinState get state => (super.noSuchMethod(Invocation.getter(#state),
       returnValue: _FakeCoinState_2()) as _i4.CoinState);
   @override
-  _i8.Stream<_i4.CoinState> get stream => (super.noSuchMethod(
+  _i7.Stream<_i4.CoinState> get stream => (super.noSuchMethod(
       Invocation.getter(#stream),
-      returnValue: Stream<_i4.CoinState>.empty()) as _i8.Stream<_i4.CoinState>);
+      returnValue: Stream<_i4.CoinState>.empty()) as _i7.Stream<_i4.CoinState>);
   @override
   bool get isClosed =>
       (super.noSuchMethod(Invocation.getter(#isClosed), returnValue: false)
           as bool);
   @override
-  bool get hasListeners =>
-      (super.noSuchMethod(Invocation.getter(#hasListeners), returnValue: false)
-          as bool);
+  dynamic toggleLivePricing(_i4.CoinState? coinState) =>
+      super.noSuchMethod(Invocation.method(#toggleLivePricing, [coinState]));
   @override
-  dynamic setLoading(bool? loading) =>
-      super.noSuchMethod(Invocation.method(#setLoading, [loading]));
+  _i7.Future<Map<String, _i8.MarketCoin>> getMarketCoins() =>
+      (super.noSuchMethod(Invocation.method(#getMarketCoins, []),
+              returnValue: Future<Map<String, _i8.MarketCoin>>.value(
+                  <String, _i8.MarketCoin>{}))
+          as _i7.Future<Map<String, _i8.MarketCoin>>);
   @override
-  dynamic updateMarketCoin(Map<String, dynamic>? priceData) =>
-      super.noSuchMethod(Invocation.method(#updateMarketCoin, [priceData]));
+  Map<String, _i8.MarketCoin> updateMarketCoin(String? priceData) =>
+      (super.noSuchMethod(Invocation.method(#updateMarketCoin, [priceData]),
+              returnValue: <String, _i8.MarketCoin>{})
+          as Map<String, _i8.MarketCoin>);
   @override
   void add(_i9.CoinEvent? event) =>
       super.noSuchMethod(Invocation.method(#add, [event]),
@@ -115,9 +102,9 @@ class MockCoinBloc extends _i1.Mock implements _i5.CoinBloc {
       super.noSuchMethod(Invocation.method(#onTransition, [transition]),
           returnValueForMissingStub: null);
   @override
-  _i8.Future<void> close() => (super.noSuchMethod(Invocation.method(#close, []),
+  _i7.Future<void> close() => (super.noSuchMethod(Invocation.method(#close, []),
       returnValue: Future<void>.value(),
-      returnValueForMissingStub: Future<void>.value()) as _i8.Future<void>);
+      returnValueForMissingStub: Future<void>.value()) as _i7.Future<void>);
   @override
   void onChange(_i10.Change<_i4.CoinState>? change) =>
       super.noSuchMethod(Invocation.method(#onChange, [change]),
@@ -129,20 +116,5 @@ class MockCoinBloc extends _i1.Mock implements _i5.CoinBloc {
   @override
   void onError(Object? error, StackTrace? stackTrace) =>
       super.noSuchMethod(Invocation.method(#onError, [error, stackTrace]),
-          returnValueForMissingStub: null);
-  @override
-  void addListener(_i11.VoidCallback? listener) =>
-      super.noSuchMethod(Invocation.method(#addListener, [listener]),
-          returnValueForMissingStub: null);
-  @override
-  void removeListener(_i11.VoidCallback? listener) =>
-      super.noSuchMethod(Invocation.method(#removeListener, [listener]),
-          returnValueForMissingStub: null);
-  @override
-  void dispose() => super.noSuchMethod(Invocation.method(#dispose, []),
-      returnValueForMissingStub: null);
-  @override
-  void notifyListeners() =>
-      super.noSuchMethod(Invocation.method(#notifyListeners, []),
           returnValueForMissingStub: null);
 }

@@ -1,7 +1,6 @@
 import 'package:betterhodl_flutter/core/bloc/coin_bloc.dart';
 import 'package:betterhodl_flutter/core/network/socket_service.dart';
 import 'package:betterhodl_flutter/domain/models/market_coin.dart';
-// import 'package:betterhodl_flutter/view_models/market_coins_view_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:http/http.dart' as http;
@@ -66,7 +65,8 @@ void main() {
       final client = MockClient();
       final socketService = MockSocketService();
       // var marketCoinsViewModel = MarketCoinsViewModel(client, socketService);
-      var marketCoinsViewModel = CoinBloc(client, socketService);
+      var marketCoinsViewModel =
+          CoinBloc(client: client, socketService: socketService);
       when(client.get(Uri.parse(marketCoinUri)))
           .thenAnswer((_) async => http.Response(marketJson, 200));
       when(socketService.connectAndListen(
@@ -81,7 +81,8 @@ void main() {
       final client = MockClient();
       final socketService = MockSocketService();
       // var marketCoinsViewModel = MarketCoinsViewModel(client, socketService);
-      var marketCoinsViewModel = CoinBloc(client, socketService);
+      var marketCoinsViewModel =
+          CoinBloc(client: client, socketService: socketService);
       when(client.get(Uri.parse(marketCoinUri)))
           .thenAnswer((_) async => http.Response(marketJson, 200));
       when(socketService.connectAndListen(
