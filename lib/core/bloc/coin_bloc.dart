@@ -13,19 +13,7 @@ import 'package:betterhodl_flutter/core/network/socket_service.dart';
 import 'package:betterhodl_flutter/domain/models/market_coin.dart';
 import 'package:http/http.dart' as http;
 
-// So after we write our first bloc here, then how will we access it in our UI?
-//  Answer: with BlocProvider
-
-// I will eventually be using BlocProvider instead of ChangeNotifier
 class CoinBloc extends Bloc<CoinEvent, CoinState> {
-  // bool _loading = false;
-  // bool get loading => _loading;
-  // bool _livePricingEnabled = false;
-
-  // List<MarketCoin> _marketCoins = [];
-  // List<MarketCoin> get marketCoins => _marketCoins;
-  // Map<String, MarketCoin> marketCoinMap = {};
-
   final http.Client client;
   final SocketService socketService;
 
@@ -44,7 +32,6 @@ class CoinBloc extends Bloc<CoinEvent, CoinState> {
         )) {
     on<FetchCoins>((event, emit) async {
       final marketCoinMap = await getMarketCoins();
-      print('Here in FetchCoins!!');
       emit(CoinState(
         sortOrder: SortOrders.marketCapDesc,
         marketCoinMap: marketCoinMap,
@@ -65,7 +52,6 @@ class CoinBloc extends Bloc<CoinEvent, CoinState> {
     );
 
     on<ToggleLivePricing>((event, emit) {
-      print('Here in ToggleLivePricing!!');
       toggleLivePricing(state);
       emit(CoinState(
         sortOrder: state.sortOrder,
@@ -77,8 +63,6 @@ class CoinBloc extends Bloc<CoinEvent, CoinState> {
 
     on<LivePricingUpdate>((event, emit) {
       var marketCoinMap = updateMarketCoin(event.priceData);
-      print('Here in LivePricingUpdate!!');
-      print(event.priceData);
       emit(CoinState(
         sortOrder: SortOrders.marketCapDesc,
         marketCoinMap: marketCoinMap,

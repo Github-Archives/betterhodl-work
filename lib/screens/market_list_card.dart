@@ -1,5 +1,3 @@
-// ! right now i'm calling events from the UI
-// !  Ui needs to call events to get the new state!!
 import 'package:betterhodl_flutter/domain/models/market_coin.dart';
 import 'package:betterhodl_flutter/screens/screen_utils.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +17,8 @@ class MarketListCard extends StatelessWidget {
           flex: 20,
           child: Column(children: [
             Image.network(marketCoin.image, width: 15, height: 15),
-            Text(marketCoin.symbol)
+            Text(marketCoin.symbol,
+                key: ValueKey('${marketCoin.symbol}-$key')) // ?
           ])),
       Expanded(
           flex: 20,
