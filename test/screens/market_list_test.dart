@@ -1,22 +1,15 @@
-import 'dart:ffi';
-
-import 'package:betterhodl_flutter/constants.dart';
-import 'package:betterhodl_flutter/core/bloc/coin_bloc.dart';
-import 'package:betterhodl_flutter/core/bloc/coin_event.dart';
-import 'package:betterhodl_flutter/domain/models/market_coin.dart';
-import 'package:betterhodl_flutter/screens/market_list.dart';
+import 'package:betterhodl_flutter/src/core/bloc/coin_bloc.dart';
+import 'package:betterhodl_flutter/src/core/bloc/coin_event.dart';
+import 'package:betterhodl_flutter/src/domain/models/market_coin.dart';
+import 'package:betterhodl_flutter/src/screens/market_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
-import 'package:provider/provider.dart';
-
 import '../blocs/market_coins_bloc_test.mocks.dart';
-import 'market_list_test.mocks.dart';
 
-import 'package:betterhodl_flutter/core/network/socket_service.dart';
 import 'package:http/http.dart' as http;
 
 var marketCoin = MarketCoin(

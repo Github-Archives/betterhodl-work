@@ -6,7 +6,8 @@ import 'dart:async' as _i6;
 import 'dart:convert' as _i7;
 import 'dart:typed_data' as _i8;
 
-import 'package:betterhodl_flutter/core/network/socket_service.dart' as _i10;
+import 'package:betterhodl_flutter/src/core/network/socket_service.dart'
+    as _i10;
 import 'package:http/src/base_request.dart' as _i9;
 import 'package:http/src/client.dart' as _i5;
 import 'package:http/src/response.dart' as _i2;

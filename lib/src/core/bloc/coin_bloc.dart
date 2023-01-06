@@ -2,16 +2,16 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart' as http;
 
-import '../../constants.dart';
+import 'package:betterhodl_flutter/src/core/network/api_status.dart';
+import 'package:betterhodl_flutter/src/core/network/rest_service.dart';
+import 'package:betterhodl_flutter/src/core/network/socket_service.dart';
+import 'package:betterhodl_flutter/src/domain/models/market_coin.dart';
+
+import '../../../constants.dart';
 import 'coin_event.dart';
 import 'coin_state.dart';
-
-import 'package:betterhodl_flutter/core/network/api_status.dart';
-import 'package:betterhodl_flutter/core/network/rest_service.dart';
-import 'package:betterhodl_flutter/core/network/socket_service.dart';
-import 'package:betterhodl_flutter/domain/models/market_coin.dart';
-import 'package:http/http.dart' as http;
 
 class CoinBloc extends Bloc<CoinEvent, CoinState> {
   final http.Client client;

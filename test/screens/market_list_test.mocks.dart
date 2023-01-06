@@ -5,11 +5,11 @@
 import 'dart:async' as _i7;
 
 import 'package:betterhodl_flutter/constants.dart' as _i6;
-import 'package:betterhodl_flutter/core/bloc/coin_bloc.dart' as _i5;
-import 'package:betterhodl_flutter/core/bloc/coin_event.dart' as _i9;
-import 'package:betterhodl_flutter/core/bloc/coin_state.dart' as _i4;
-import 'package:betterhodl_flutter/core/network/socket_service.dart' as _i3;
-import 'package:betterhodl_flutter/domain/models/market_coin.dart' as _i8;
+import 'package:betterhodl_flutter/src/core/bloc/coin_bloc.dart' as _i5;
+import 'package:betterhodl_flutter/src/core/bloc/coin_event.dart' as _i9;
+import 'package:betterhodl_flutter/src/core/bloc/coin_state.dart' as _i4;
+import 'package:betterhodl_flutter/src/core/network/socket_service.dart' as _i3;
+import 'package:betterhodl_flutter/src/domain/models/market_coin.dart' as _i8;
 import 'package:flutter_bloc/flutter_bloc.dart' as _i10;
 import 'package:http/http.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;

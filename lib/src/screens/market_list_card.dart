@@ -1,5 +1,5 @@
-import 'package:betterhodl_flutter/domain/models/market_coin.dart';
-import 'package:betterhodl_flutter/screens/screen_utils.dart';
+import 'package:betterhodl_flutter/src/domain/models/market_coin.dart';
+import 'package:betterhodl_flutter/src/screens/screen_utils.dart';
 import 'package:flutter/material.dart';
 
 class MarketListCard extends StatelessWidget {

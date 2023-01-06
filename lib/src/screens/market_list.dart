@@ -1,13 +1,8 @@
-import 'package:betterhodl_flutter/core/bloc/coin_state.dart';
-import 'package:betterhodl_flutter/core/components/app_loading.dart';
-import 'package:betterhodl_flutter/screens/coin_detail.dart';
-import 'package:betterhodl_flutter/screens/market_list_card.dart';
+import 'package:betterhodl_flutter/src/core/bloc/coin_state.dart';
+import 'package:betterhodl_flutter/src/screens/coin_detail.dart';
+import 'package:betterhodl_flutter/src/screens/market_list_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:http/src/client.dart';
-import 'package:provider/provider.dart';
-
-import '../constants.dart';
 import '../core/bloc/coin_bloc.dart';
 import '../core/bloc/coin_event.dart';
 

@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:betterhodl_flutter/core/network/api_status.dart';
+import 'package:betterhodl_flutter/src/core/network/api_status.dart';
 import 'package:http/http.dart' as http;
 
 class NetworkException implements Exception {

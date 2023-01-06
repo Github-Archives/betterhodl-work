@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import '../../constants.dart';
+import '../../../constants.dart';
 import '../../domain/models/market_coin.dart';
 
 @immutable

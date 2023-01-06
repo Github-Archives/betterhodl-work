@@ -1,5 +1,5 @@
-import 'package:betterhodl_flutter/domain/models/market_coin.dart';
-import 'package:betterhodl_flutter/screens/market_list_card.dart';
+import 'package:betterhodl_flutter/src/domain/models/market_coin.dart';
+import 'package:betterhodl_flutter/src/screens/market_list_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:network_image_mock/network_image_mock.dart';

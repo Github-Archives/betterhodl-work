@@ -1,6 +1,4 @@
-// ! right now i'm calling events from the UI
-// !  Ui needs to call events to get the new state!!
-import 'package:betterhodl_flutter/domain/models/market_coin.dart';
+import 'package:betterhodl_flutter/src/domain/models/market_coin.dart';
 import 'package:flutter/material.dart';
 
 import 'screen_utils.dart';
